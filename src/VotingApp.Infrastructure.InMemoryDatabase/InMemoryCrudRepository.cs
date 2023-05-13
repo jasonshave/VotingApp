@@ -7,7 +7,7 @@ namespace VotingApp.Infrastructure.InMemoryDatabase
         where TDomainModel : IAggregateRoot
     {
         private readonly ConcurrentDictionary<string, TPersistedModel> _storage = new();
-        public TDomainModel? Get(string id)
+        public TDomainModel Get(string id)
         {
             throw new NotImplementedException();
         }

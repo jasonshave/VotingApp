@@ -1,6 +1,3 @@
-using FluentAssertions;
-using Moq;
-
 namespace VotingApp.Domain.Tests;
 
 public class UnitTest1
