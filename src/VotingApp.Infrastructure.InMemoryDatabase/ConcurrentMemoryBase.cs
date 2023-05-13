@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using VotingApp.Domain.Abstractions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace VotingApp.Infrastructure.InMemoryDatabase;
 
