@@ -30,13 +30,13 @@ public abstract class ConcurrentMemoryBase<TData> : ICrudRepository<TData>
 
     public TData Get(string id)
     {
-        _data.TryRemove(id, out var result);
-        if (result is null)
+        _data.TryRemove(id, out var data);
+        if (data is null)
         {
             _logger.LogGetDataError(id);
             throw new NotFoundException($"Unable to get data with ID {id}.");
         }
 
-        return result;
+        return data;
     }
 }

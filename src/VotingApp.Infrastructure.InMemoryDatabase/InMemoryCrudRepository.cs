@@ -3,10 +3,11 @@ using VotingApp.Domain.Abstractions;
 
 namespace VotingApp.Infrastructure.InMemoryDatabase
 {
-    public abstract class InMemoryCrudRepository<TDomainModel, TPersistedModel> : ICrudRepository<TDomainModel>
+    public class InMemoryCrudRepository<TDomainModel, TPersistedModel> : ICrudRepository<TDomainModel>
         where TDomainModel : IAggregateRoot
     {
         private readonly ConcurrentDictionary<string, TPersistedModel> _storage = new();
+
         public TDomainModel Get(string id)
         {
             throw new NotImplementedException();
