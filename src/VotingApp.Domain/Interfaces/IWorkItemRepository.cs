@@ -12,12 +12,4 @@ namespace VotingApp.Domain.Interfaces
     {
 
     }
-
-    public interface IDoAllRepository<TData>
-        where TData : IAggregateRoot
-    {
-        TData Save(TData data);
-
-        TData Get(string id);
-    }
 }
