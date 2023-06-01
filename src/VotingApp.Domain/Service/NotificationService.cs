@@ -10,7 +10,7 @@ namespace VotingApp.Domain.Service
     {
         public NotificationService() { }
 
-        public void Notifiy(IEnumerable<string> ParticipantIds, string NotificationContent)
+        public void Notify(IEnumerable<string> participantIds, string notificationContent)
         {
 
         }

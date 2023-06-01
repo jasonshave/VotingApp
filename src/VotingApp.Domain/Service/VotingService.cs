@@ -30,13 +30,16 @@ namespace VotingApp.Domain.Service
         /// </summary>
         /// <param name="workItemId"></param>
         /// <param name="participant"></param>
-        public void Join(string workItemId, Participant participant)
+        public bool Join(string workItemId, Participant participant)
         {
             var workItem = _repository.Get(workItemId);
-            if (!workItem.Participants.Contains(participant))
+            var found = workItem.Participants.Any(p => p.Id == participant.Id);
+            if (found)
             {
                 workItem.Participants.Add(participant);
+               _repository.Save(workItem);
             }
+            return found;
         }
 
         /// <summary>
@@ -44,9 +47,18 @@ namespace VotingApp.Domain.Service
         /// </summary>
         /// <param name="workItemId"></param>
         /// <param name="participantId"></param>
-        public void Leave(string workItemId, string participantId)
+        public bool Leave(string workItemId, string participantId)
         {
+            var workItem = _repository.Get(workItemId);
+            var targetParticipant = workItem.Participants.Find(p => p.Id == participantId);
+            var found = targetParticipant != null;
 
+            if (found)
+            {
+                workItem.Participants.Remove(targetParticipant);
+                _repository.Save(workItem);
+            }
+            return found;
         }
 
         /// <summary>
