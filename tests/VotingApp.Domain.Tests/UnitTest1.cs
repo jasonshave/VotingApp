@@ -12,7 +12,7 @@ public class UnitTest1
         var subject = new VotingService(mockWorkItemRepo.Object);
 
         // act
-        var workItem = subject.CreateWorkItem(host);
+        var workItem = subject.CreateWorkItem(host, "Test", true);
 
         // assert
         workItem.Should().NotBeNull();

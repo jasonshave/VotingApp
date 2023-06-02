@@ -1,15 +1,9 @@
 ﻿using VotingApp.Domain.Abstractions;
 using VotingApp.Domain.Models;
 
-namespace VotingApp.Domain.Interfaces
+namespace VotingApp.Domain.Interfaces;
+
+public interface IWorkItemRepository : ICrudRepository<WorkItem>
 {
-    public interface IWorkItemRepository : ICrudRepository<WorkItem>
-    {
-        IEnumerable<WorkItem> GetAllWorkItemsByName(string name);
-    }
-
-    public interface IParticipantRepository : IDoAllRepository<Participant>
-    {
-
-    }
+    IEnumerable<WorkItem> GetAllWorkItemsByName(string name);
 }
