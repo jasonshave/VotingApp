@@ -85,17 +85,30 @@ namespace VotingApp.Domain.Service
         }
 
         /// <summary>
-        /// check wether request is from host if so enable voting
+        /// check whether request is from host if so enable voting
         /// </summary>
         /// <param name="workItemId"></param>
         /// <param name="participantId"></param>
+        /// <exception cref="ApplicationException"></exception>
         public void EnableVoting(string workItemId, string participantId)
         {
+            var workItem = _repository.Get(workItemId);
+
+            if (workItem.Host.Id == participantId)
+            {
+                workItem.VotingEnabled = true;
+            } 
+            else
+            {
+                throw new ApplicationException($"Participant {participantId} is not the host of workItem {workItemId}");
+            }
+
+            _repository.Save(workItem);
 
         }
 
         /// <summary>
-        /// check wether request is from host if so disable voting
+        /// check whether request is from host if so disable voting
         /// </summary>
         /// <param name="workItemId"></param>
         /// <param name="participantId"></param>
