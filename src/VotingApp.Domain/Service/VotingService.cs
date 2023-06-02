@@ -1,4 +1,6 @@
-﻿using VotingApp.Domain.Interfaces;
+﻿using Microsoft.Extensions.Logging;
+using VotingApp.Domain.Abstractions;
+using VotingApp.Domain.Interfaces;
 using VotingApp.Domain.Models;
 
 namespace VotingApp.Domain.Service
@@ -6,10 +8,12 @@ namespace VotingApp.Domain.Service
     public class VotingService
     {
         private readonly IWorkItemRepository _repository;
+        private readonly ILogger<VotingService> _logger;
 
-        public VotingService(IWorkItemRepository repository)
+        public VotingService(IWorkItemRepository repository, ILogger<VotingService> logger)
         {
             _repository = repository;
+            _logger = logger;
         }
 
         public WorkItem CreateWorkItem(Participant host, string name, bool isAnonymous)
@@ -66,10 +70,18 @@ namespace VotingApp.Domain.Service
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public WorkItem GetWorkItem(string id)
+        public WorkItem? GetWorkItem(string id)
         {
             //ToDo: hide votes when voting is enabled
-            return _repository.Get(id);
+            try
+            {
+                var result = _repository.Get(id);
+                return result;
+            }
+            catch (NotFoundException e)
+            {
+                return null;
+            }
         }
 
         /// <summary>
