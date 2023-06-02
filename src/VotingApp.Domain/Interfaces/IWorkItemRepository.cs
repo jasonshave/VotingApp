@@ -7,9 +7,4 @@ namespace VotingApp.Domain.Interfaces
     {
         IEnumerable<WorkItem> GetAllWorkItemsByName(string name);
     }
-
-    public interface IParticipantRepository : IDoAllRepository<Participant>
-    {
-
-    }
 }
