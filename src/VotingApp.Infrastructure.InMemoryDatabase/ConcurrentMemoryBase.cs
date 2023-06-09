@@ -17,8 +17,8 @@ public abstract class ConcurrentMemoryBase<TData> : ICrudRepository<TData>
 
     public TData Save(TData data)
     {
-        var success = _data.TryAdd(data.Id, data);
-        if (!success)
+        var success = _data.AddOrUpdate(data.Id, data, (_, _) => data);
+        if (success is null)
         {
             _logger.LogSaveDataError(data.Id);
             throw new ApplicationException($"Unable to save data with ID {data.Id}");
@@ -30,7 +30,7 @@ public abstract class ConcurrentMemoryBase<TData> : ICrudRepository<TData>
 
     public TData Get(string id)
     {
-        _data.TryRemove(id, out var data);
+        _data.TryGetValue(id, out var data);
         if (data is null)
         {
             _logger.LogGetDataError(id);

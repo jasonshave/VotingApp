@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\VotingApp.Domain\VotingApp.Domain.csproj" />
+    <ProjectReference Include="..\VotingApp.TestHost\VotingApp.TestHost.csproj" />
   </ItemGroup>
 
 </Project>

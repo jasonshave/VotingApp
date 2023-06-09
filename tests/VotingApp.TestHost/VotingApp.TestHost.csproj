@@ -10,4 +10,11 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
 		<PackageReference Include="xunit.abstractions" Version="2.0.3" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\src\VotingApp.Domain.Abstractions\VotingApp.Domain.Abstractions.csproj" />
+	  <ProjectReference Include="..\..\src\VotingApp.Domain\VotingApp.Domain.csproj" />
+	  <ProjectReference Include="..\..\src\VotingApp.Infrastructure.InMemoryDatabase\VotingApp.Infrastructure.InMemoryDatabase.csproj" />
+	  <ProjectReference Include="..\..\src\VotingApp.Persistence\VotingApp.Persistence.csproj" />
+	</ItemGroup>
 </Project>

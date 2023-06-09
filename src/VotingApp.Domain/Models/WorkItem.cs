@@ -6,6 +6,7 @@ public class WorkItem : IAggregateRoot
 {
     public string Id { get; init; }
 
+    // Key is ParticipantId
     public IDictionary<string, Vote> Votes { get; } = new Dictionary<string, Vote>();
 
     public Participant Host { get; set; }
