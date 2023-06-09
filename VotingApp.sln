@@ -9,11 +9,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6B3AD011
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VotingApp.Domain.Tests", "tests\VotingApp.Domain.Tests\VotingApp.Domain.Tests.csproj", "{6CD41FE5-4E1F-4F92-8F8E-61CE0EBB39FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApp.Persistence", "src\VotingApp.Persistence\VotingApp.Persistence.csproj", "{16CCAFA1-E5AA-41A5-A331-390AE8FCE0CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VotingApp.Persistence", "src\VotingApp.Persistence\VotingApp.Persistence.csproj", "{16CCAFA1-E5AA-41A5-A331-390AE8FCE0CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApp.Infrastructure.InMemoryDatabase", "src\VotingApp.Infrastructure.InMemoryDatabase\VotingApp.Infrastructure.InMemoryDatabase.csproj", "{097D24B8-CCF1-494B-9570-CD905108E085}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VotingApp.Infrastructure.InMemoryDatabase", "src\VotingApp.Infrastructure.InMemoryDatabase\VotingApp.Infrastructure.InMemoryDatabase.csproj", "{097D24B8-CCF1-494B-9570-CD905108E085}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApp.Domain.Abstractions", "src\VotingApp.Domain.Abstractions\VotingApp.Domain.Abstractions.csproj", "{8DF828D3-7952-4A8F-9633-75FE7C1FF4C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VotingApp.Domain.Abstractions", "src\VotingApp.Domain.Abstractions\VotingApp.Domain.Abstractions.csproj", "{8DF828D3-7952-4A8F-9633-75FE7C1FF4C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApp.TestHost", "tests\VotingApp.TestHost\VotingApp.TestHost.csproj", "{79DAA78D-7B58-4948-9BB9-12649DDE6806}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,12 +43,17 @@ Global
 		{8DF828D3-7952-4A8F-9633-75FE7C1FF4C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DF828D3-7952-4A8F-9633-75FE7C1FF4C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DF828D3-7952-4A8F-9633-75FE7C1FF4C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79DAA78D-7B58-4948-9BB9-12649DDE6806}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79DAA78D-7B58-4948-9BB9-12649DDE6806}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79DAA78D-7B58-4948-9BB9-12649DDE6806}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79DAA78D-7B58-4948-9BB9-12649DDE6806}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{6CD41FE5-4E1F-4F92-8F8E-61CE0EBB39FD} = {6B3AD011-38C7-4E16-9B44-72FE188B2CE6}
+		{79DAA78D-7B58-4948-9BB9-12649DDE6806} = {6B3AD011-38C7-4E16-9B44-72FE188B2CE6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5D5B41C0-10E3-4A06-87FC-CECC887FF080}
