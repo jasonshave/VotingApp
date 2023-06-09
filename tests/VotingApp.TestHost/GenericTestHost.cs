@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using VotingApp.Domain.Interfaces;
+using VotingApp.Domain.Service;
+using VotingApp.Persistence;
 using Xunit.Abstractions;
 
 namespace VotingApp.TestHost;
@@ -20,6 +23,8 @@ public abstract class GenericTestHost
             .ConfigureServices(services =>
             {
                 servicesDelegate?.Invoke(services);
+                services.AddSingleton<IWorkItemRepository, WorkItemRepository>();
+                services.AddSingleton<IVotingService, VotingService>();
             })
             .Build();
     }

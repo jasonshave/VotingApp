@@ -1,3 +1,4 @@
+using System.Xml.Linq;
 using Microsoft.Extensions.Logging;
 using VotingApp.Domain.Abstractions;
 
@@ -97,5 +98,80 @@ public class UnitTest1
         //act
         //assert
         subject.Invoking(x => x.EnableVoting(workItem.Id, "anotherId")).Should().Throw<ApplicationException>();
+    }
+
+    [Fact]
+    public void VotingService_DisableVoting_DoesNotThrow()
+    {
+        //arrange
+        var host = new Participant("abc", "Frank");
+        var mockWorkItemRepo = new Mock<IWorkItemRepository>();
+        var mockLogger = new Mock<ILogger<VotingService>>();
+        WorkItem workItem = new WorkItem()
+        {
+            Id = Guid.NewGuid().ToString(),
+            Host = host,
+            Name = "Test",
+            VotingEnabled = false,
+            IsAnonymous = true
+        };
+        mockWorkItemRepo.Setup(x => x.Save(It.IsAny<WorkItem>())).Returns((WorkItem y) => y);
+        mockWorkItemRepo.Setup(x => x.Get(It.IsAny<string>())).Returns(workItem);
+
+        var subject = new VotingService(mockWorkItemRepo.Object, mockLogger.Object);
+
+        //act
+        //assert
+        subject.Invoking(x => x.DisableVoting(workItem.Id, host.Id)).Should().NotThrow();
+    }
+
+    [Fact(DisplayName = "WorkItem not found")]
+    public void VotingService_DisableVoting_ThrowsNotFoundException()
+    {
+        //arrange
+        var host = new Participant("abc", "Frank");
+        var mockWorkItemRepo = new Mock<IWorkItemRepository>();
+        var mockLogger = new Mock<ILogger<VotingService>>();
+        WorkItem workItem = new WorkItem()
+        {
+            Id = Guid.NewGuid().ToString(),
+            Host = host,
+            Name = "Test",
+            VotingEnabled = false,
+            IsAnonymous = true
+        };
+        mockWorkItemRepo.Setup(x => x.Save(It.IsAny<WorkItem>())).Returns((WorkItem y) => y);
+        mockWorkItemRepo.Setup(x => x.Get(It.IsAny<string>())).Throws<NotFoundException>();
+
+        var subject = new VotingService(mockWorkItemRepo.Object, mockLogger.Object);
+
+        //act
+        //assert
+        subject.Invoking(x => x.DisableVoting(workItem.Id, host.Id)).Should().Throw<NotFoundException>();
+    }
+
+    [Fact(DisplayName = "Participant is not host")]
+    public void VotingService_DisableVoting_ThrowsApplicationException_ParticipantIsNotHost()
+    {
+        //arrange
+        var host = new Participant("abc", "Frank");
+        var mockWorkItemRepo = new Mock<IWorkItemRepository>();
+        var mockLogger = new Mock<ILogger<VotingService>>();
+        WorkItem workItem = new WorkItem()
+        {
+            Id = Guid.NewGuid().ToString(),
+            Host = host,
+            Name = "Test",
+            VotingEnabled = false,
+            IsAnonymous = true
+        };
+        mockWorkItemRepo.Setup(x => x.Save(It.IsAny<WorkItem>())).Returns((WorkItem y) => y);
+        mockWorkItemRepo.Setup(x => x.Get(It.IsAny<string>())).Returns(workItem);
+
+        var subject = new VotingService(mockWorkItemRepo.Object, mockLogger.Object);
+
+        //act
+        //assert
+        subject.Invoking(x => x.DisableVoting(workItem.Id, "anotherId")).Should().Throw<ApplicationException>();
     }
 }
