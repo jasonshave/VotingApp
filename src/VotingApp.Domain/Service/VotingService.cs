@@ -112,22 +112,53 @@ namespace VotingApp.Domain.Service
         public void Vote(Vote vote)
         {
             var workItem = _repository.Get(vote.WorkItemId);
-            if (workItem.VotingEnabled && workItem.Participants.Any(x=>x.Id == vote.Participant.Id))
+
+            if (!workItem.VotingEnabled)
             {
-                workItem.Votes[vote.Participant.Id] = vote;
-                _repository.Save(workItem);
+                throw new ApplicationException($"Voting is disabled for ${vote.WorkItemId}");
             }
+
+            //if (!workItem.Participants.Any(x => x.Id == vote.Participant.Id))
+            //{
+            //    throw new NotFoundException($"Participant ${vote.Participant.Id} is not found");
+            //}
+
+            workItem.Votes[vote.ParticipantId] = vote;
+            _repository.Save(workItem);
         }
         
         public void AssignHost(string workItemId, string pariticipantId, string newHostId)
         {
+            var workItem = _repository.Get(workItemId);
+            if (workItem.Host.Id == pariticipantId)
+            {
+                var newHost = workItem.Participants.Find(x => x.Id == newHostId);
+                if (newHost is not null)
+                {
+                    workItem.Host = newHost;
+                    _repository.Save(workItem);
+                }
+                else
+                {
+                    throw new NotFoundException($"Participant{newHostId} is not found in workItem {workItemId}");
+                }
+            }
+            else 
+            {
+                throw new ApplicationException($"Participant {pariticipantId} is not host of workItem {workItemId}");
+             }
 
         }
 
-        
-        public void SetAnonymous(string  workItemId, bool isAnonymous)
-        {
 
+        public void SetAnonymous(string workItemId, string hostId, bool isAnonymous)
+        {
+            var workItem = _repository.Get(workItemId);
+            if (workItem.Host.Id == hostId)
+            {
+
+                _repository.Save(workItem);
+            }
         }
     }
 }

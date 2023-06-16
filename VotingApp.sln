@@ -15,7 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VotingApp.Infrastructure.In
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VotingApp.Domain.Abstractions", "src\VotingApp.Domain.Abstractions\VotingApp.Domain.Abstractions.csproj", "{8DF828D3-7952-4A8F-9633-75FE7C1FF4C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApp.TestHost", "tests\VotingApp.TestHost\VotingApp.TestHost.csproj", "{79DAA78D-7B58-4948-9BB9-12649DDE6806}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VotingApp.TestHost", "tests\VotingApp.TestHost\VotingApp.TestHost.csproj", "{79DAA78D-7B58-4948-9BB9-12649DDE6806}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApp.Api", "src\VotingApp.Api\VotingApp.Api.csproj", "{E9394125-DACC-41AB-8BF5-C1E405788271}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApp.Contract", "src\VotingApp.Contract\VotingApp.Contract.csproj", "{38E8EBE2-F00C-4120-B78E-1A510F8C1C41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +51,14 @@ Global
 		{79DAA78D-7B58-4948-9BB9-12649DDE6806}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79DAA78D-7B58-4948-9BB9-12649DDE6806}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79DAA78D-7B58-4948-9BB9-12649DDE6806}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9394125-DACC-41AB-8BF5-C1E405788271}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9394125-DACC-41AB-8BF5-C1E405788271}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9394125-DACC-41AB-8BF5-C1E405788271}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9394125-DACC-41AB-8BF5-C1E405788271}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38E8EBE2-F00C-4120-B78E-1A510F8C1C41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38E8EBE2-F00C-4120-B78E-1A510F8C1C41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38E8EBE2-F00C-4120-B78E-1A510F8C1C41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38E8EBE2-F00C-4120-B78E-1A510F8C1C41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

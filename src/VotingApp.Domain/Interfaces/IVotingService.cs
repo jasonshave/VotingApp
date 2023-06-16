@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VotingApp.Domain.Models;
+using VotingApp.Domain.Abstractions;
 
 namespace VotingApp.Domain.Interfaces
 {
@@ -44,7 +45,7 @@ namespace VotingApp.Domain.Interfaces
         /// </summary>
         /// <param name="workItemId"></param>
         /// <param name="participantId"></param>
-        /// <exception cref="ApplicationException"></exception>
+        /// <exception cref="ApplicationException" />
         void EnableVoting(string workItemId, string participantId);
         /// <summary>
         /// check whether request is from host if so disable voting
@@ -56,24 +57,27 @@ namespace VotingApp.Domain.Interfaces
         /// <summary>
         /// Voting on a workitem
         /// </summary>
-        /// <param name="participantId"></param>
-        /// <param name="workItemId"></param>
         /// <param name="vote"></param>
+        /// <exception cref="ApplicationException" />
+        /// <exception cref="NotFoundException" />
         public void Vote(Vote vote);
 
         /// <summary>
-        /// 
+        ///  Assign new host for a work item
         /// </summary>
         /// <param name="workItemId"></param>
         /// <param name="pariticipantId"></param>
         /// <param name="newHostId"></param>
+        /// <exception cref="ApplicationException" />
+        /// <exception cref="NotFoundException" />
         public void AssignHost(string workItemId, string pariticipantId, string newHostId);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="workItemId"></param>
+        /// /// <param name="hostId"></param>
         /// <param name="isAnonymous"></param>
-        public void SetAnonymous(string workItemId, bool isAnonymous);
+        public void SetAnonymous(string workItemId, string hostId, bool isAnonymous);
     }
 }
