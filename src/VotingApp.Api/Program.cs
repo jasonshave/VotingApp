@@ -1,10 +1,15 @@
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using VotingApp.Contract;
 using VotingApp.Contract.Requests;
 using VotingApp.Contract.Responses;
+using VotingApp.Domain.Abstractions;
 using VotingApp.Domain.Interfaces;
 using VotingApp.Domain.Models;
 using VotingApp.Domain.Service;
+using VotingApp.Infrastructure.InMemoryDatabase;
+using VotingApp.Persistence;
+using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,8 +17,39 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddSingleton<ICrudRepository<WorkItem>, WorkItemRepository>();
+builder.Services.AddSingleton<IWorkItemRepository, AnotherWorkItemRepository>();
+builder.Services.AddSingleton<IVotingService, VotingService>();
 var app = builder.Build();
+app.UseExceptionHandler(exceptionHandler =>
+{
+    exceptionHandler.Run(async context =>
+    {
+
+        // using static System.Net.Mime.MediaTypeNames;
+        context.Response.ContentType = Text.Plain;
+
+        var exceptionHandlerPathFeature =
+            context.Features.Get<IExceptionHandlerPathFeature>();
+
+
+        if (exceptionHandlerPathFeature?.Error is VotingApp.Domain.Abstractions.NotFoundException
+        || exceptionHandlerPathFeature?.Error is VotingApp.Infrastructure.InMemoryDatabase.NotFoundException)
+        {
+            context.Response.StatusCode = StatusCodes.Status404NotFound;
+        }
+        else if (exceptionHandlerPathFeature?.Error is ForbiddenException)
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+        }
+        else
+        {
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        }
+        
+        await context.Response.WriteAsync(exceptionHandlerPathFeature.Error.Message);
+    });
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -24,11 +60,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapPost("/api/workItems", (CreateWorkItemRequest request, IVotingService votingServivce) =>
+app.MapPost("/api/workItems", async (CreateWorkItemRequest request, IVotingService votingServivce) =>
 {
     var host = new Participant(request.Host.Id, request.Host.Name);
 
-    var workItem = votingServivce.CreateWorkItem(host, request.Names, request.IsAnonymous);
+    var workItem = votingServivce.CreateWorkItem(host, request.Name, request.IsAnonymous);
 
     var hostDto = new ParticipantDto
     {
@@ -49,14 +85,15 @@ app.MapPost("/api/workItems", (CreateWorkItemRequest request, IVotingService vot
     return Results.Ok(response);
 });
 
-app.MapPut("/api/workItems/{id}:vote", ([FromRoute] string id, VotingRequest request, IVotingService votingService) =>
+app.MapPut("/api/workItems/{id}:vote", async ([FromRoute] string id, VotingRequest request, IVotingService votingService) =>
 {
-    var vote = new Vote(Guid.NewGuid().ToString(), request.Participant, id, request.Value);
+    var participant = new Participant(request.Participant.Id, request.Participant.Name);
+    var vote = new Vote(Guid.NewGuid().ToString(), participant, id, request.Value);
     votingService.Vote(vote);
     return Results.Ok();
 });
 
-app.MapGet("/app/workItems/{id}", ([FromRoute] string id, IVotingService votingService) =>
+app.MapGet("/api/workItems/{id}", async ([FromRoute] string id, IVotingService votingService) =>
 {
     var workItem = votingService.GetWorkItem(id);
     if (workItem == null)
@@ -87,23 +124,24 @@ app.MapGet("/app/workItems/{id}", ([FromRoute] string id, IVotingService votingS
             Id = v.Value.Id,
             Participant = new ParticipantDto
             {
-                Id = v.Value.ParticipantId,
-                Name = workItem.Participants.Find(p => p.Id == v.Value.ParticipantId)?.Name ?? ""
+                Id = v.Value.Participant.Id,
+                Name = v.Value.Participant.Name
             },
-            Value = workItem.VotingEnabled ? v.Value.Value : -1,
+            WorkItemId = v.Value.WorkItemId,
+            Value = !workItem.VotingEnabled ? v.Value.Value : -1,
         }),
         
     };
     return Results.Ok(response);
 });
 
-app.MapPost("/api/workItems/{id}:enableVoting", ([FromRoute] string id, EnableVotingRequest request, IVotingService votingServivce) =>
+app.MapPost("/api/workItems/{id}:enableVoting", async ([FromRoute] string id, EnableVotingRequest request, IVotingService votingServivce) =>
 {
     votingServivce.EnableVoting(id, request.HostId);
     return Results.Ok();
 });
 
-app.MapPost("/api/workItems/{id}:disableVoting", ([FromRoute] string id, DisableVotingRequest request, IVotingService votingServivce) =>
+app.MapPost("/api/workItems/{id}:disableVoting", async ([FromRoute] string id, DisableVotingRequest request, IVotingService votingServivce) =>
 {
     votingServivce.DisableVoting(id, request.HostId);
     return Results.Ok();

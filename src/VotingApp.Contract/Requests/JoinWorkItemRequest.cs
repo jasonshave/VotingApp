@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace VotingApp.Contract.Requests
 {
-    public class VotingRequest
+    public class JoinWorkItemRequest
     {
         public ParticipantDto Participant { get; set; }
-        public int Value { get; set; }
     }
 }

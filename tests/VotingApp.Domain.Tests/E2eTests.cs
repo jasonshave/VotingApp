@@ -23,7 +23,7 @@ public class E2eTests : GenericTestHost
         
         // act
         var workItem = votingService.CreateWorkItem(hostParticipant, "workitem", false);
-        var vote1 = new Vote("voteId1", hostParticipant.Id, workItem.Id, 1);
+        var vote1 = new Vote("voteId1", hostParticipant, workItem.Id, 1);
         
 
         votingService.Vote(vote1);

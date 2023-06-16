@@ -84,7 +84,7 @@ namespace VotingApp.Domain.Service
             } 
             else
             {
-                throw new ApplicationException($"Participant {participantId} is not the host of workItem {workItemId}");
+                throw new ForbiddenException($"Participant {participantId} is not the host of workItem {workItemId}");
             }
 
             _repository.Save(workItem);
@@ -102,7 +102,7 @@ namespace VotingApp.Domain.Service
             }
             else
             {
-                throw new ApplicationException($"Participant {participantId} is not the host of workItem {workItemId}");
+                throw new ForbiddenException($"Participant {participantId} is not the host of workItem {workItemId}");
             }
 
             _repository.Save(workItem);
@@ -115,7 +115,7 @@ namespace VotingApp.Domain.Service
 
             if (!workItem.VotingEnabled)
             {
-                throw new ApplicationException($"Voting is disabled for ${vote.WorkItemId}");
+                throw new ForbiddenException($"Voting is disabled for ${vote.WorkItemId}");
             }
 
             //if (!workItem.Participants.Any(x => x.Id == vote.Participant.Id))
@@ -123,7 +123,7 @@ namespace VotingApp.Domain.Service
             //    throw new NotFoundException($"Participant ${vote.Participant.Id} is not found");
             //}
 
-            workItem.Votes[vote.ParticipantId] = vote;
+            workItem.Votes[vote.Participant.Id] = vote;
             _repository.Save(workItem);
         }
         
@@ -145,7 +145,7 @@ namespace VotingApp.Domain.Service
             }
             else 
             {
-                throw new ApplicationException($"Participant {pariticipantId} is not host of workItem {workItemId}");
+                throw new ForbiddenException($"Participant {pariticipantId} is not host of workItem {workItemId}");
              }
 
         }
