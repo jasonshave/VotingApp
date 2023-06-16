@@ -97,7 +97,7 @@ public class UnitTest1
 
         //act
         //assert
-        subject.Invoking(x => x.EnableVoting(workItem.Id, "anotherId")).Should().Throw<ApplicationException>();
+        subject.Invoking(x => x.EnableVoting(workItem.Id, "anotherId")).Should().Throw<ForbiddenException>();
     }
 
     [Fact]
@@ -172,6 +172,6 @@ public class UnitTest1
 
         //act
         //assert
-        subject.Invoking(x => x.DisableVoting(workItem.Id, "anotherId")).Should().Throw<ApplicationException>();
+        subject.Invoking(x => x.DisableVoting(workItem.Id, "anotherId")).Should().Throw<ForbiddenException>();
     }
 }
