@@ -116,10 +116,9 @@ app.MapGet("/api/workItems/{id}/Voted", async ([FromRoute] string id, IVotingSer
     var response = new GetVotedResponse
     {
         VoteCount = workItem.Participants.Count(),
-        Participants = workItem.Participants.Select(p => new ParticipantDto
+        Participants = workItem.Votes.Select(p => new ParticipantDto
         {
-            Id = p.Id,
-            Name = p.Name
+            Id = p.Value.Participant.Id,
         })
     };
     return Results.Ok(response);
