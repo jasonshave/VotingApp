@@ -8,9 +8,7 @@ namespace VotingApp.Contract
 {
     public class VoteDto
     {
-        public string Id { get; set; }
-        public ParticipantDto Participant { get; set; }
-        public string WorkItemId { get; set; }
+        public string ParticipantId { get; set; }
         public int Value { get; set; }
     }
 }

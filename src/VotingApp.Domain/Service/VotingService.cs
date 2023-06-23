@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Linq;
+using Microsoft.Extensions.Logging;
 using VotingApp.Domain.Abstractions;
 using VotingApp.Domain.Interfaces;
 using VotingApp.Domain.Models;
@@ -61,10 +62,23 @@ namespace VotingApp.Domain.Service
         
         public WorkItem? GetWorkItem(string id)
         {
-            //ToDo: hide votes when voting is enabled
             try
             {
-                var result = _repository.Get(id);
+                var workItem = _repository.Get(id);
+                var result = new WorkItem
+                {
+                    Id = workItem.Id,
+                    Host = workItem.Host,
+                    IsAnonymous = workItem.IsAnonymous,
+                    VotingEnabled = workItem.VotingEnabled,
+                };
+                
+                result.Participants.AddRange(workItem.Participants);
+                var votes = workItem.Votes.OrderBy((pair) => pair.Value.Value);
+                foreach (var pair in votes)
+                {
+                    result.Votes.Add(pair);
+                }
                 return result;
             }
             catch (NotFoundException e)
@@ -108,7 +122,23 @@ namespace VotingApp.Domain.Service
             _repository.Save(workItem);
         }
 
-        
+        public void ClearVoting(string workItemId, string participantId)
+        {
+            var workItem = _repository.Get(workItemId);
+
+            if (workItem.Host.Id == participantId)
+            {
+                workItem.Votes.Clear();
+            }
+            else
+            {
+                throw new ForbiddenException($"Participant {participantId} is not the host of workItem {workItemId}");
+            }
+
+            _repository.Save(workItem);
+        }
+
+
         public void Vote(Vote vote)
         {
             var workItem = _repository.Get(vote.WorkItemId);

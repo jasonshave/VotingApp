@@ -10,7 +10,11 @@ public class UnitTest1
     public void VotingService_CreateWorkItem_Creates()
     {
         // arrange
-        var host = new Participant("abc", "Frank");
+        var host = new Participant()
+        {
+            Id = "abc",
+            Name = "Frank"
+        };
         var mockWorkItemRepo = new Mock<IWorkItemRepository>();
         var mockLogger = new Mock<ILogger<VotingService>>();
         mockWorkItemRepo.Setup(x => x.Save(It.IsAny<WorkItem>())).Returns((WorkItem y) => y);
@@ -29,7 +33,11 @@ public class UnitTest1
     public void VotingService_EnableVoting_DoesNotThrow()
     {
         //arrange
-        var host = new Participant("abc", "Frank");
+        var host = new Participant()
+        {
+            Id = "abc",
+            Name = "Frank" 
+        };
         var mockWorkItemRepo = new Mock<IWorkItemRepository>();
         var mockLogger = new Mock<ILogger<VotingService>>();
         WorkItem workItem = new WorkItem()
@@ -54,7 +62,11 @@ public class UnitTest1
     public void VotingService_EnableVoting_ThrowsNotFoundException()
     {
         //arrange
-        var host = new Participant("abc", "Frank");
+        var host = new Participant()
+        {
+            Id = "abc",
+            Name = "Frank"
+        };
         var mockWorkItemRepo = new Mock<IWorkItemRepository>();
         var mockLogger = new Mock<ILogger<VotingService>>();
         WorkItem workItem = new WorkItem()
@@ -79,7 +91,11 @@ public class UnitTest1
     public void VotingService_EnableVoting_ThrowsApplicationException_ParticipantIsNotHost()
     {
         //arrange
-        var host = new Participant("abc", "Frank");
+        var host = new Participant()
+        {
+            Id = "abc",
+            Name = "Frank"
+        };
         var mockWorkItemRepo = new Mock<IWorkItemRepository>();
         var mockLogger = new Mock<ILogger<VotingService>>();
         WorkItem workItem = new WorkItem()
@@ -104,7 +120,11 @@ public class UnitTest1
     public void VotingService_DisableVoting_DoesNotThrow()
     {
         //arrange
-        var host = new Participant("abc", "Frank");
+        var host = new Participant()
+        {
+            Id = "abc",
+            Name = "Frank"
+        };
         var mockWorkItemRepo = new Mock<IWorkItemRepository>();
         var mockLogger = new Mock<ILogger<VotingService>>();
         WorkItem workItem = new WorkItem()
@@ -129,7 +149,11 @@ public class UnitTest1
     public void VotingService_DisableVoting_ThrowsNotFoundException()
     {
         //arrange
-        var host = new Participant("abc", "Frank");
+        var host = new Participant()
+        {
+            Id = "abc",
+            Name = "Frank"
+        };
         var mockWorkItemRepo = new Mock<IWorkItemRepository>();
         var mockLogger = new Mock<ILogger<VotingService>>();
         WorkItem workItem = new WorkItem()
@@ -154,7 +178,11 @@ public class UnitTest1
     public void VotingService_DisableVoting_ThrowsApplicationException_ParticipantIsNotHost()
     {
         //arrange
-        var host = new Participant("abc", "Frank");
+        var host = new Participant()
+        {
+            Id = "abc",
+            Name = "Frank"
+        };
         var mockWorkItemRepo = new Mock<IWorkItemRepository>();
         var mockLogger = new Mock<ILogger<VotingService>>();
         WorkItem workItem = new WorkItem()

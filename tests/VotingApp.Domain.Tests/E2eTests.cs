@@ -19,7 +19,10 @@ public class E2eTests : GenericTestHost
     {
         // arrange
         var votingService = _host.Services.GetRequiredService<IVotingService>();
-        var hostParticipant = new Participant("hostId", "host");        
+        var hostParticipant = new Participant{
+            Id = "hostId", 
+            Name = "host" 
+        };        
         
         // act
         var workItem = votingService.CreateWorkItem(hostParticipant, "workitem", false);
@@ -34,5 +37,54 @@ public class E2eTests : GenericTestHost
         savedWorkItem.Should().NotBeNull();
         savedWorkItem.Votes.First().Value.Should().BeSameAs(vote1);
         savedWorkItem.Votes.First().Key.Should().BeSameAs(hostParticipant.Id);
+    }
+
+    [Fact(DisplayName = "test get workItem Votes is orderby voting value")]
+    public void Get_WorkItem_Vote_Should_InOrder()
+    {
+        // arrange
+        var votingService = _host.Services.GetRequiredService<IVotingService>();
+        var hostParticipant = new Participant
+        {
+            Id = "hostId",
+            Name = "host"
+        };
+
+        var ParticipantZ = new Participant
+        {
+            Id = "zhostId",
+            Name = "zParticipant"
+        };
+
+        var ParticipantA = new Participant
+        {
+            Id = "ahostId",
+            Name = "aParticipant"
+        };
+
+        // act
+        var workItem = votingService.CreateWorkItem(hostParticipant, "workitem", false);
+        var vote1 = new Vote("voteId1", hostParticipant, workItem.Id, 3);
+        var vote2 = new Vote("voteId2", ParticipantA, workItem.Id, 8);
+        var vote3 = new Vote("voteId3", ParticipantZ, workItem.Id, 1);
+
+
+
+        votingService.Vote(vote1);
+        votingService.Vote(vote2);
+        votingService.Vote(vote3);
+        votingService.DisableVoting(workItem.Id, hostParticipant.Id);
+        var savedWorkItem = votingService.GetWorkItem(workItem.Id);
+
+        // assert
+        savedWorkItem.Should().NotBeNull();
+        var list = savedWorkItem.Votes.ToList();
+        list.Count().Should().Be(3);
+        list.First().Value.Should().BeSameAs(vote3);
+        list.First().Key.Should().BeSameAs(ParticipantZ.Id);
+        list[1].Value.Should().BeSameAs(vote1);
+        list[1].Key.Should().BeSameAs(hostParticipant.Id);
+        list[2].Value.Should().BeSameAs(vote2);
+        list[2].Key.Should().BeSameAs(ParticipantA.Id);
     }
 }
