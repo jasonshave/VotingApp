@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Linq;
+using Microsoft.Extensions.Logging;
 using VotingApp.Domain.Abstractions;
 using VotingApp.Domain.Interfaces;
 using VotingApp.Domain.Models;
@@ -61,10 +62,23 @@ namespace VotingApp.Domain.Service
         
         public WorkItem? GetWorkItem(string id)
         {
-            //ToDo: hide votes when voting is enabled
             try
             {
-                var result = _repository.Get(id);
+                var workItem = _repository.Get(id);
+                var result = new WorkItem
+                {
+                    Id = workItem.Id,
+                    Host = workItem.Host,
+                    IsAnonymous = workItem.IsAnonymous,
+                    VotingEnabled = workItem.VotingEnabled,
+                };
+                
+                result.Participants.AddRange(workItem.Participants);
+                var votes = workItem.Votes.OrderBy((pair) => pair.Value.Value);
+                foreach (var pair in votes)
+                {
+                    result.Votes.Add(pair);
+                }
                 return result;
             }
             catch (NotFoundException e)
@@ -84,7 +98,7 @@ namespace VotingApp.Domain.Service
             } 
             else
             {
-                throw new ApplicationException($"Participant {participantId} is not the host of workItem {workItemId}");
+                throw new ForbiddenException($"Participant {participantId} is not the host of workItem {workItemId}");
             }
 
             _repository.Save(workItem);
@@ -102,32 +116,79 @@ namespace VotingApp.Domain.Service
             }
             else
             {
-                throw new ApplicationException($"Participant {participantId} is not the host of workItem {workItemId}");
+                throw new ForbiddenException($"Participant {participantId} is not the host of workItem {workItemId}");
             }
 
             _repository.Save(workItem);
         }
 
-        
+        public void ClearVoting(string workItemId, string participantId)
+        {
+            var workItem = _repository.Get(workItemId);
+
+            if (workItem.Host.Id == participantId)
+            {
+                workItem.Votes.Clear();
+            }
+            else
+            {
+                throw new ForbiddenException($"Participant {participantId} is not the host of workItem {workItemId}");
+            }
+
+            _repository.Save(workItem);
+        }
+
+
         public void Vote(Vote vote)
         {
             var workItem = _repository.Get(vote.WorkItemId);
-            if (workItem.VotingEnabled && workItem.Participants.Any(x=>x.Id == vote.Participant.Id))
+
+            if (!workItem.VotingEnabled)
             {
-                workItem.Votes[vote.Participant.Id] = vote;
-                _repository.Save(workItem);
+                throw new ForbiddenException($"Voting is disabled for ${vote.WorkItemId}");
             }
+
+            //if (!workItem.Participants.Any(x => x.Id == vote.Participant.Id))
+            //{
+            //    throw new NotFoundException($"Participant ${vote.Participant.Id} is not found");
+            //}
+
+            workItem.Votes[vote.Participant.Id] = vote;
+            _repository.Save(workItem);
         }
         
         public void AssignHost(string workItemId, string pariticipantId, string newHostId)
         {
+            var workItem = _repository.Get(workItemId);
+            if (workItem.Host.Id == pariticipantId)
+            {
+                var newHost = workItem.Participants.Find(x => x.Id == newHostId);
+                if (newHost is not null)
+                {
+                    workItem.Host = newHost;
+                    _repository.Save(workItem);
+                }
+                else
+                {
+                    throw new NotFoundException($"Participant{newHostId} is not found in workItem {workItemId}");
+                }
+            }
+            else 
+            {
+                throw new ForbiddenException($"Participant {pariticipantId} is not host of workItem {workItemId}");
+             }
 
         }
 
-        
-        public void SetAnonymous(string  workItemId, bool isAnonymous)
-        {
 
+        public void SetAnonymous(string workItemId, string hostId, bool isAnonymous)
+        {
+            var workItem = _repository.Get(workItemId);
+            if (workItem.Host.Id == hostId)
+            {
+
+                _repository.Save(workItem);
+            }
         }
     }
 }
